@@ -3,6 +3,8 @@ package inventoryManager;
 import java.util.ArrayList;
 import java.util.List;
 
+//clean 
+
 /***
  * This class represents a product category in the store network. To simplify
  * classification and eliminate potential errors in the database, categories and
@@ -64,15 +66,21 @@ public class Category {
 	private List<String> subcategories;
 
 	/***
-	 * constructor: takes name of product's category. An empty list (ArrayList) is
+	 * Constructor: takes name of product's category. An empty list (ArrayList) is
 	 * automatically created. It will store the subcategories of the given category,
-	 * and they can be added through the class method.
+	 * and they can be added through the class method. 
+	 * If the category is already exist, new category not added to list of categories.
 	 * 
 	 * @param categoryName
 	 */
 	public Category(String categoryName) {
 		this.categoryName = categoryName;
 		this.subcategories = new ArrayList<String>();
+		if(!Stock.getCategories().contains(this)) {
+			List<Category> categories = Stock.getCategories();
+			categories.add(this);
+			Stock.setCategories(categories);
+		}
 	}
 
 	/***

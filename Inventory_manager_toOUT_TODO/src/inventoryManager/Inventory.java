@@ -1,232 +1,110 @@
 package inventoryManager;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+
+//clean
 
 public class Inventory implements InventoryUpdatable{
-	private static Scanner sc;
-	private static Product pr;
-	private static boolean done;
-	private static boolean ascending;
-	private static List <Product> products = new ArrayList<Product>();
-	private static List<Category> category = new ArrayList<Category>();
+	private static int inventoryCounter = 0;
 	private List<Product> inventoryList;
 	private Map<Product,Integer> inventoryMap;
 	private Product inventoryProduct;
-	private int counter;
+	private int inventoryProductCounter;
+	private String inventoryName;
 	
 	/***
-	 * The class has both static and non-static methods. 
-	 * Static methods are used for managing the product database and the main warehouse data. 
-	 * The class object and non-static methods are used for conducting inventory 
-	 * (reconciliation of the products in the store with the quantities in the warehouse). 
-	 * Each subsequent check involves creating a new object of the class.
+	 * CLASS INVENTORY 
+	 *The class object and non-static methods are used for conducting inventory 
+	 *(reconciliation of products in the store with the quantities in the warehouse). 
+	 *Each subsequent check involves creating a new object of the class. The product to be 
+	 *inventoried is selected, and if the hash code matches, its quantity is increased by one 
+	 *(scanning from the shelves). In case of an error, the result can be reset, 
+	 *or the product quantity can be manually specified. When the product is changed, 
+	 *an inventory number is assigned, and if necessary, its result can be edited later. 
+	 *The inventory process does not alter warehouse data; it allows for re-scanning items or 
+	 *manually specifying the product quantity to compare with warehouse data, identifying shortages or 
+	 *unaccounted items.
+	 */
+	
+	
+	/***
+	 * The constructor takes no parameters for initialization. In the constructor, a new list is created 
+	 * from the already existing products, and the first product in the list becomes the item to be checked. 
+	 * If the incoming (scanned) hash code belongs to the checked product, the quantity of the product in 
+	 * the map is increased by one. 
 	 */
 	public Inventory() {
-		this.counter = 1;
-		this.inventoryList = products;
-		this.inventoryProduct = products.getFirst();
+		this.inventoryName = genID();
+		this.inventoryList = Stock.getProducts();
+		this.inventoryProduct = Stock.getProducts().getFirst();
+		this.inventoryProductCounter = 0;
 		this.inventoryMap = new HashMap<Product,Integer>();
-		
 	}
 
+	/***
+	 * The method takes a hash code as a parameter. 
+	 * If the hash code matches the selected product's hash code, the product 
+	 * quantity is increased by 1, and the method returns `true`. If it does not match, 
+	 * the method returns `false`.
+	 */
 	@Override
 	public boolean addProductQuantityOneByOne(String hashcode) {
-//		if(inventoryProduct.)
+		if(inventoryProduct.getProductShopHashCode().equals(hashcode)) {
+			inventoryProductCounter++;
+			return true;
+		}
 		return false;
 	}
 
+	/***
+	 * The method takes the product's hash code and the final quantity as parameters. 
+	 * The method allows manually entering the final product quantity for the inventory. 
+	 * It returns `true` if the operation is successful, or `false` if it is not.
+	 * @return boolean
+	 */
 	@Override
 	public boolean addTotalProductQuantity(String hashcode, int totalQuantity) {
-		// TODO Auto-generated method stub
+		if(!hashcode.isBlank() && totalQuantity>=0 && (inventoryProduct.getProductShopHashCode().equals(hashcode))){
+			inventoryMap.put(inventoryProduct, inventoryProductCounter);
+		}
 		return false;
 	}
 
-	@Override
-	public boolean reserProductQuantity(String hashcode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public static void addProduct() {
-		//String name, String category, double price, int stockQuantity
-		System.out.println("Let's make a new product.");
-		String name = getStringName("Enter name of product: ");
-		String category = getStringName("Enter category number of category: ");
-//		TODO
-		Double price = (double)0;
-		int stockQuantity = 0;
-		try {
-			price = Double.valueOf(getStringName("Enter price as number: ").trim());
-			stockQuantity = Integer.valueOf(getStringName("Enter quantity as number: ").trim());
-		}catch(Exception e) {
-			System.out.println("This number is not correct");
-			System.out.println(e.getMessage());	
-		}
-//		pr = new Product(name,category,price,stockQuantity);
-		System.out.println("Product is added");
-	}
-	
-	public static void removeProduct(String name){
-		done = false;
-		products.forEach(p -> {
-			if(p.getName().equals(name)) {
-				pr = p;
-				done = true;
-			}
-		});
-		products.remove(pr);
-		System.out.println("Product "+pr.getName()+" is deleted");
-		if(!done) {
-			System.out.println("Product not found");
-		}
-	}
-		
-	public static void sortByPrice() {
-		if(Inventory.getStringName("Do you want to sort products by ascending? Y/N: ").trim().equalsIgnoreCase("y")) {
-			ascending = true;
-		}else {
-			ascending = false;
-		}
-		if(ascending) {
-			products.sort((p1, p2) -> ((Double)p1.getPrice()).compareTo((Double)(p2.getPrice()))); 
-		}else {
-			products.sort((p1, p2) -> (-1)*((Double)p1.getPrice()).compareTo((Double)(p2.getPrice())));
-		}
-		System.out.println("Products are sorted");
-	}
-	
-	public static void getLowStockProducts() {
-		try {
-			double threshold = Double.valueOf(Inventory.getStringName("Enter price: ").trim());
-			done = false;
-			products.forEach(p -> {
-				if(p.getPrice()<threshold) {
-					p.getProductDetails();
-					done = true;
-				}
-			});
-		}catch(Exception e) {
-			e.getMessage();
-		}
-		if(!done) {
-			System.out.println("Products not found");
-		}
-	}
-	
-	public static void sortProducts() {
-		products.sort((p1, p2) -> p1.getName().compareTo(p2.getName())); 
-	}
-	
-	public static void allProductsInfo() {
-		products.forEach(p -> p.getProductDetails());
-	}
-	
-	
-	public static Product findProductByCategory(String category) {
-		done = false;
-		products.forEach(p -> {
-			if(p.getCategory().equalsIgnoreCase(category)) {
-				p.getProductDetails();
-				done = true;
-			}
-		});
-		if(!done) {
-			System.out.println("Category not found");
-		}
-		return pr;
-	}
-	
-	public static Product findProductByName(String productName) {
-		done = false;
-		pr = products.getFirst();
-		products.forEach(p -> {
-			if(p.getName().equalsIgnoreCase(productName)) {
-				pr = p;
-				System.out.println("Product found");
-				done = true;
-			}
-		});
-		if(!done) {
-			System.out.println("Product not found");
-		}
-		pr.getProductDetails();
-		return pr;
-	}
-	
-	public static String getStringName(String str) {
-		int x = 5;
-		while(x>0) {
-			System.out.println(str);
-			String clientString = sc.nextLine();
-			if(clientString.isBlank()) {
-				System.out.println("This is not correct. You have attempts: "+(--x));
-			}else {
-				return clientString;
-			}
-		}
-		return "Not real";
-		
-	}
-	
-	public boolean isCategory(String categoryName) {
-		if (!categoryName.isBlank()) {
-			}
-//			if(getCategoryByName()) {
-//			return(categories.contains(subcategoryName));
-//		}
-//			return false;
-	}
-	
-	public static void exit(){
-		System.out.println("Bye");
-		sc.close();
-	}
-	
 	/***
-	 * 
-	 * @param sc
+	 * The method takes the hash code of the product to be checked as a parameter. 
+	 * The product quantity for the inventory is reset to zero.
+	 * It returns `true` if the operation is successful, or `false` if it is not.
+	 * @param hashcode
+	 * @return boolean (is successful or not)
 	 */
-	public static void startScanner(Scanner sc) {
-		setSc(sc);
+	@Override
+	public boolean resetProductQuantity(String hashcode) {
+		if(!hashcode.isBlank() && (inventoryProduct.getProductShopHashCode().equals(hashcode))) {
+			inventoryMap.replace(inventoryProduct, 0);
+			return true;
+		}
+		return false;
 	}
-
+	
+	/**
+	 * Utility method generates ID
+	 * 
+	 * @return ID
+	 */
+	private static String genID() {
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+		return "inv"+now.format(formatter)+inventoryCounter++;
+	}
 	/***
 	 * Getters and setters
 	 *
 	 */
-	public static List<Product> getProducts() {
-		return (List<Product>) products;
-	}
-
-	public static void setProducts(ArrayList<Product> products) {
-		Inventory.products = products;
-	}	
-
-
-	public static void setSc(Scanner sc) {
-		Inventory.sc = sc;
-	}
-
-	public static boolean isAscending() {
-		return ascending;
-	}
-
-	public static void setAscending(boolean ascending) {
-		Inventory.ascending = ascending;
-	}
-
-	public static List<Category> getCategory() {
-		return category;
-	}
-
-	public static void setCategory(List<Category> category) {
-		Inventory.category = category;
-	}
-
+	
 	public List<Product> getInventoryList() {
 		return inventoryList;
 	}
@@ -251,11 +129,16 @@ public class Inventory implements InventoryUpdatable{
 		this.inventoryProduct = inventoryProduct;
 	}
 
-
-	public static void setProducts(List<Product> products) {
-		Inventory.products = products;
+	public int getInventoryProductCounter() {
+		return inventoryProductCounter;
 	}
-	
-	
+
+	public void setInventoryProductCounter(int inventoryProductCounter) {
+		this.inventoryProductCounter = inventoryProductCounter;
+	}
+
+	public String getInventoryName() {
+		return inventoryName;
+	}	
 }
 

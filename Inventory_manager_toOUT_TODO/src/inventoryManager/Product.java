@@ -41,7 +41,7 @@ public Product(String productUNHashCode, String productName, String productCateg
 		this.productSale = productSale;
 		this.productSalePrice = productPrice;
 		this.productStockQuantity = 0;
-		Inventory.getProducts().add(this);
+		Stock.getProducts().add(this);
 	}
 	
 
@@ -50,7 +50,7 @@ public Product(String productUNHashCode, String productName, String productCateg
 	 * It takes the quantity of product and adds it to the existing quantity (receipt into the warehouse).
 	 * The quantity of goods must always be a positive number or zero.
 	 * @param quantity
-	 * @return
+	 * @return boolean: it returns `true` if the operation is successful, or `false` if it is not.
 	 */
 	public boolean productStockQuantityPlusQuantity(int quantity) {
 		if((productStockQuantity+quantity)>=0) {
@@ -64,7 +64,7 @@ public Product(String productUNHashCode, String productName, String productCateg
 	 * It is used in the class constructor.
 	 * This method generates a hash code for use within the store (or store network). 
 	 * Each product must have such a hash code for inventory purposes.
-	 * @return
+	 * @return String with hash-code
 	 */
 	private String generateShopHashCode() {
 		 return String.valueOf(hashCode());
@@ -130,9 +130,9 @@ public Product(String productUNHashCode, String productName, String productCateg
 		return productStockQuantity;
 	}
 
-//	public void setProductStockQuantity(int productStockQuantity) {
-//		this.productStockQuantity = productStockQuantity;
-//	}
+	public void setProductStockQuantity(int productStockQuantity) {
+		this.productStockQuantity = productStockQuantity;
+	} 
 
 	@Override
 	public int hashCode() {
@@ -153,7 +153,5 @@ public Product(String productUNHashCode, String productName, String productCateg
 				&& Objects.equals(productName, other.productName)
 				&& Objects.equals(productSubcategory, other.productSubcategory)
 				&& Objects.equals(productUNHashCode, other.productUNHashCode);
-	}
-	
-	
+	}	
 }
