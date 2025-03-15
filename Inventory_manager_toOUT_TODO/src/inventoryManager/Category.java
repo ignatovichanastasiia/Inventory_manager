@@ -1,11 +1,13 @@
 package inventoryManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //clean 
 
 /***
+ * CLASS CATEGORY
  * This class represents a product category in the store network. To simplify
  * classification and eliminate potential errors in the database, categories and
  * subcategories have been standardized. However, categories and subcategories
@@ -19,7 +21,7 @@ import java.util.List;
  * 
  * In retail food networks, several standard categories and subcategories of
  * products are typically identified. Here are some of them:
- * 
+ *
  * 1. **Food Products:** - **Vegetables and fruits:** fresh, frozen, canned. -
  * **Meat and meat products:** fresh meat, sausages, semi-finished products. -
  * **Fish and seafood:** fresh, frozen, canned. - **Dairy products:** milk,
@@ -60,11 +62,19 @@ import java.util.List;
  * These categories and subcategories may vary depending on the specific store
  * network and region.
  */
-
 public class Category {
 	private String categoryName;
 	private List<String> subcategories;
 
+	private static final List <String> FOOD_PRODUCTS = new ArrayList<String>(Arrays.asList("Vegetables and fruits","Meat and meat products","Fish and seafood","Dairy products", "Bakery products","Confectionery products","Cereals and pasta","Grocery","Beverages"));
+	private static final List <String> FROZEN_PRODUCTS = new ArrayList<String>(Arrays.asList("Frozen vegetables and fruits","Frozen meat and fish","Semi-finished products and pizza","Desserts and ice cream"));
+	private static final List <String> HEALTH_PRODUCTS = new ArrayList<String>(Arrays.asList("Gluten-free products","Vegetarian and vegan products","Diet products","Organic products"));
+	private static final List <String> ALCOHOLIC_BEVERAGES_PRODUCTS = new ArrayList<String>(Arrays.asList("Beer","Wine","Strong drinks"));
+	private static final List <String> NON_ALCOHOLIC_BEVERAGES_PRODUCTS = new ArrayList<String>(Arrays.asList("Mineral waters and soda","Juices and nectar","Tea and coffee","Energy drinks"));
+	private static final List <String> HOUSEHOLD_PRODUCTS = new ArrayList<String>(Arrays.asList("Cleaning and washing products","Laundry and cleaning supplies","Kitchen supplies"));
+	private static final List <String> COSMETICS_HYGIENE_PRODUCTS = new ArrayList<String>(Arrays.asList("Face and body cosmetics","Shampoos, conditioners","Hygiene products"));
+//	TODO
+	
 	/***
 	 * Constructor: takes name of product's category. An empty list (ArrayList) is
 	 * automatically created. It will store the subcategories of the given category,
@@ -101,7 +111,7 @@ public class Category {
 	
 	/***
 	 * The method takes the name of the subcategory. If the name is not empty 
-	 * and such a subcategory is in the list, it memoves the name from the list.
+	 * and such a subcategory is in the list, it removes the name from the list.
 	 * 
 	 * @param subcategoryName
 	 * @return true of false. It is a status: whether the operation was successful or not
@@ -149,5 +159,21 @@ public class Category {
 	public void setSubcategories(List<String> subcategories) {
 		this.subcategories = subcategories;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder strB = new StringBuilder();
+		strB.append("Category " + categoryName + ",\nsubcategories: ");
+		if(subcategories.size()!=0) {
+		subcategories.forEach(sub -> {
+			strB.append("\t"+(subcategories.indexOf(sub)+1)+" -> "+sub+"; ");
+		});
+		}else {
+			strB.append("nothing.");
+		}
+		return strB.toString();
+	}
+	
+	
 
 }

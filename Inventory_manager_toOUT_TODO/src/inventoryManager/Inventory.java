@@ -7,29 +7,26 @@ import java.util.List;
 import java.util.Map;
 
 //clean
-
+/***
+ * CLASS INVENTORY 
+ *The class object and non-static methods are used for conducting inventory 
+ *(reconciliation of products in the store with the quantities in the warehouse). 
+ *Each subsequent check involves creating a new object of the class. The product to be 
+ *inventoried is selected, and if the hash code matches, its quantity is increased by one 
+ *(scanning from the shelves). In case of an error, the result can be reset, 
+ *or the product quantity can be manually specified. When the product is changed, 
+ *an inventory number is assigned, and if necessary, its result can be edited later. 
+ *The inventory process does not alter warehouse data; it allows for re-scanning items or 
+ *manually specifying the product quantity to compare with warehouse data, identifying shortages or 
+ *unaccounted items.
+ */
 public class Inventory implements InventoryUpdatable{
 	private static int inventoryCounter = 0;
 	private List<Product> inventoryList;
 	private Map<Product,Integer> inventoryMap;
 	private Product inventoryProduct;
 	private int inventoryProductCounter;
-	private String inventoryName;
-	
-	/***
-	 * CLASS INVENTORY 
-	 *The class object and non-static methods are used for conducting inventory 
-	 *(reconciliation of products in the store with the quantities in the warehouse). 
-	 *Each subsequent check involves creating a new object of the class. The product to be 
-	 *inventoried is selected, and if the hash code matches, its quantity is increased by one 
-	 *(scanning from the shelves). In case of an error, the result can be reset, 
-	 *or the product quantity can be manually specified. When the product is changed, 
-	 *an inventory number is assigned, and if necessary, its result can be edited later. 
-	 *The inventory process does not alter warehouse data; it allows for re-scanning items or 
-	 *manually specifying the product quantity to compare with warehouse data, identifying shortages or 
-	 *unaccounted items.
-	 */
-	
+	private String inventoryName;	
 	
 	/***
 	 * The constructor takes no parameters for initialization. In the constructor, a new list is created 

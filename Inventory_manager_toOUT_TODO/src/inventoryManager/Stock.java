@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/***
+ * CLASS STOCK
+ * Static methods of the class are used for managing the product database and the main
+ * warehouse data.
+ */
 public class Stock {
 	private static Scanner sc;
 	private static Product pr;
@@ -12,13 +17,6 @@ public class Stock {
 	private static List<Product> products = new ArrayList<Product>();
 	private static List<Category> categories = new ArrayList<Category>();
 	private static List<Inventory> inventories = new ArrayList<Inventory>();
-
-	/***
-	 * CLASS
-	 * Static methods of the class are used for managing the product database and the main
-	 * warehouse data.
-	 */
-	
 	
 	/***
 	 * Method get entries from user and added new product. It returns `true` if the
@@ -32,6 +30,7 @@ public class Stock {
 		System.out.println("Let's make a new product.");
 		String hash = getStringName("Enter or scan universal hash-code: ");
 		String name = getStringName("Enter name of product: ");
+		String brand = getStringName("Enter brand of product: ");
 		String category = getStringName("Enter number of category: ");
 		String subcategory = getStringName("Enter number of subcategory: ");
 		Double price = (double) 0;
@@ -40,7 +39,7 @@ public class Stock {
 		} catch (Exception e) {
 			System.out.println("This number is not correct: " + e.getMessage());
 		}
-		return new Product(hash, name, category, subcategory, price);
+		return new Product(hash, name, brand, category, subcategory, price);
 
 	}
 
@@ -161,8 +160,39 @@ public class Stock {
 	 * 
 	 * @param sc
 	 */
-	public static void startScanner(Scanner sc) {
+	public static void startStockScanner(Scanner sc) {
 		setSc(sc);
+	}
+	
+	public static void createDefaultCategories(){
+//		TODO
+	}
+	
+	public static String categoriesToString(){
+		StringBuilder strBu = new StringBuilder();
+		strBu.append("Categories:\n");
+		if(categories.size()!=0) {
+		categories.forEach(cat -> {
+			strBu.append("\t"+(categories.indexOf(cat)+1)+" -> "+cat+";\n");
+				strBu.append("subcategories: ");
+				List<String> subcategories = cat.getSubcategories();
+				if(cat.getSubcategories().size()!=0) {
+				subcategories.forEach(sub -> {
+					strBu.append("\t"+(subcategories.indexOf(sub)+1)+" -> "+sub+"; ");
+				});
+				}else {
+					strBu.append("nothing.");
+				}
+		});
+		}else {
+			strBu.append("nothing.");
+		}
+		return strBu.toString();
+	}
+	
+	public static String inventoriesToString(){
+//		TODO
+		return null;
 	}
 
 	/***

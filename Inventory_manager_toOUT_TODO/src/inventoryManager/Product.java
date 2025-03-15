@@ -1,21 +1,38 @@
 package inventoryManager;
 
+import java.util.List;
 import java.util.Objects;
 
+/***
+ * CLASS PRODUCT
+ * The product class logically implies the uniqueness of the product when at least one of 
+ * the following parameters does not match:  
+ * the universal hash code under which the product enters the system,  
+ * name, brand, category, subcategory, price.
+ * When any parameters are changed, the product is effectively removed from 
+ * stock and registered again as new and unique.
+ * To change the price of a product without removing it from stock, use a promotion or discount.
+ *  
+ */
 public class Product {
 	private String productUNHashCode;
 	private String productShopHashCode;
 	private String productName; 
+	private String productBrand;
 	private String productCategory;
 	private String productSubcategory;
 	private double productPrice;
 	private boolean productSale;
 	private double productSalePrice;
 	private int productStockQuantity; 
+	private boolean productMarkdown;
+	private double productMarkdownPrice; 
 	
+//	clean
+		
 	/***
 	 * The class constructor takes the following parameters: 
-	 * a universal product hash code, the product name, its category, its subcategory, 
+	 * a universal product hash code, the product name, its brand, its category, its subcategory, 
 	 * and the price. The price is the regular price of the product without any discounts. 
 	 * The discounted price is entered through a separate method. The method generates an 
 	 * internal product hash code for the store. The product quantity in the warehouse is 
@@ -24,24 +41,29 @@ public class Product {
 	 * 
 	 * @param productUNHashCode
 	 * @param productName
+	 * @param brand
 	 * @param productCategory
 	 * @param productSubcategory
 	 * @param productPrice
 	 *
 	 */
-	
-public Product(String productUNHashCode, String productName, String productCategory, String productSubcategory,
+public Product(String productUNHashCode, String productName, String brand, String productCategory, String productSubcategory,
 			double productPrice) {
-		this.productUNHashCode = productUNHashCode;
-		this.productShopHashCode = generateShopHashCode();
+		this.productUNHashCode = productUNHashCode;		
 		this.productName = productName;
+		this.productBrand = brand;
 		this.productCategory = productCategory;
 		this.productSubcategory = productSubcategory;
 		this.productPrice = productPrice;
-		this.productSale = productSale;
+		this.productShopHashCode = generateShopHashCode();
+		this.productSale = false;
 		this.productSalePrice = productPrice;
+		this.productMarkdown = false;
+		this.productMarkdownPrice = productPrice;
 		this.productStockQuantity = 0;
-		Stock.getProducts().add(this);
+		List<Product> list = Stock.getProducts();
+		list.add(this);		
+		Stock.setProducts(list);
 	}
 	
 
@@ -86,6 +108,14 @@ public Product(String productUNHashCode, String productName, String productCateg
 		this.productName = productName;
 	}
 
+	public String getProductBrand() {
+		return productBrand;
+	}
+
+	public void setProductBrand(String productBrand) {
+		this.productBrand = productBrand;
+	}
+
 	public String getProductCategory() {
 		return productCategory;
 	}
@@ -125,6 +155,22 @@ public Product(String productUNHashCode, String productName, String productCateg
 	public void setProductSalePrice(double productSalePrice) {
 		this.productSalePrice = productSalePrice;
 	}
+	
+	public boolean isProductMarkdown() {
+		return productMarkdown;
+	}
+
+	public void setProductMarkdown(boolean productMarkdown) {
+		this.productMarkdown = productMarkdown;
+	}
+
+	public double getProductMarkdownPrice() {
+		return productMarkdownPrice;
+	}
+
+	public void setProductMarkdownPrice(double productMarkdownPrice) {
+		this.productMarkdownPrice = productMarkdownPrice;
+	}
 
 	public int getProductStockQuantity() {
 		return productStockQuantity;
@@ -132,13 +178,16 @@ public Product(String productUNHashCode, String productName, String productCateg
 
 	public void setProductStockQuantity(int productStockQuantity) {
 		this.productStockQuantity = productStockQuantity;
-	} 
+	}
+
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(productCategory, productShopHashCode, productName, productSubcategory, productUNHashCode);
+		return Objects.hash(productCategory, productName, productBrand, productPrice,
+				productSubcategory, productUNHashCode);
 	}
-	
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -148,10 +197,15 @@ public Product(String productUNHashCode, String productName, String productCateg
 		if (getClass() != obj.getClass())
 			return false;
 		Product other = (Product) obj;
-		return Objects.equals(productCategory, other.productCategory)
+		return Objects.equals(productCategory, other.productCategory) && Objects.equals(productName, other.productName)
+				&& Double.doubleToLongBits(productPrice) == Double.doubleToLongBits(other.productPrice)
+				&& Objects.equals(productBrand, other.productBrand)
 				&& Objects.equals(productShopHashCode, other.productShopHashCode)
-				&& Objects.equals(productName, other.productName)
 				&& Objects.equals(productSubcategory, other.productSubcategory)
 				&& Objects.equals(productUNHashCode, other.productUNHashCode);
-	}	
+	} 
+
+
+	
+
 }
