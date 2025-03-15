@@ -72,7 +72,7 @@ public class Main {
 
 	private static void createDefCategories() {
 		System.out.println("Would you like to create the standard list of categories and subcategories?\n");
-		String answer = getStringName("Enter 'Y' for \"yes\" or eny other for \"no\"");
+		String answer = getStringEntry("Enter 'Y' for \"yes\" or eny other for \"no\"");
 		if (answer.trim().contains("Y") || answer.trim().contains("y")) {
 			Stock.createDefaultCategories();
 		}
@@ -82,7 +82,7 @@ public class Main {
 		System.out.println("Existing Categories: " + Stock.getCategories().toString()
 				+ "\nEdit categories?(Note: You will not be able to delete a category or "
 				+ "subcategory if any product is associated with it.)");
-		String answer = getStringName("Enter 'Y' for \"yes\" or eny other for \"no\"");
+		String answer = getStringEntry("Enter 'Y' for \"yes\" or eny other for \"no\"");
 		if (answer.trim().contains("Y") || answer.trim().contains("y")) {
 			editProductCategories();
 		}
@@ -146,7 +146,7 @@ public class Main {
 	 * 
 	 */
 
-	public static String getStringName(String str) {
+	public static String getStringEntry(String str) {
 		int x = 5;
 		while (x > 0) {
 			System.out.println(str);
