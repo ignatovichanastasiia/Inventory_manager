@@ -59,8 +59,6 @@ import java.util.List;
  * 9. **Pet Products:** - **Pet food.** - **Toys and accessories for pets.** -
  * **Pet care products.**
  * 
- * These categories and subcategories may vary depending on the specific store
- * network and region.
  */
 public class Category {
 	private String categoryName;
@@ -73,7 +71,8 @@ public class Category {
 	private static final List <String> NON_ALCOHOLIC_BEVERAGES_PRODUCTS = new ArrayList<String>(Arrays.asList("Mineral waters and soda","Juices and nectar","Tea and coffee","Energy drinks"));
 	private static final List <String> HOUSEHOLD_PRODUCTS = new ArrayList<String>(Arrays.asList("Cleaning and washing products","Laundry and cleaning supplies","Kitchen supplies"));
 	private static final List <String> COSMETICS_HYGIENE_PRODUCTS = new ArrayList<String>(Arrays.asList("Face and body cosmetics","Shampoos, conditioners","Hygiene products"));
-//	TODO
+	private static final List <String> BABY_PRODUCTS = new ArrayList<String>(Arrays.asList("Baby food","Diapers and wet wipes","Baby cosmetics and hygiene products","Toys and baby accessories"));
+	private static final List <String> PET_PRODUCTS = new ArrayList<String>(Arrays.asList("Pet food","Toys and accessories for pets","Pet care products"));
 	
 	/***
 	 * Constructor: takes name of product's category. An empty list (ArrayList) is

@@ -84,15 +84,18 @@ public class Main {
 				+ "subcategory if any product is associated with it.)");
 		String answer = getStringName("Enter 'Y' for \"yes\" or eny other for \"no\"");
 		if (answer.trim().contains("Y") || answer.trim().contains("y")) {
-//			TODO
+			editProductCategories();
 		}
 	}
 
-	Would you
-	like to
-	proceed with
-	creating products?
+	private static void editProductCategories() {
+//		TODO
+	}
+	
+	private static void addProducts() {
+		System.out.println("Would you like to create products?");
 
+		/*
 	1.
 	Select a
 	product category.2.
@@ -111,6 +114,7 @@ public class Main {
 //TODO test set of products and categories
 //		предложить создать стандартный список категорий и подкатегорий
 	Scanner scannerForStock = new Scanner(System.in);Stock.startScanner(scannerForStock);
+	*/
 
 	}
 

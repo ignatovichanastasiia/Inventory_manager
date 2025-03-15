@@ -2,12 +2,13 @@ package inventoryManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 /***
  * CLASS STOCK
  * Static methods of the class are used for managing the product database and the main
- * warehouse data.
+ * warehouse data. 
  */
 public class Stock {
 	private static Scanner sc;
@@ -16,9 +17,13 @@ public class Stock {
 	private static boolean ascending;
 	private static List<Product> products = new ArrayList<Product>();
 	private static List<Category> categories = new ArrayList<Category>();
-	private static List<Inventory> inventories = new ArrayList<Inventory>();
 	
 	/***
+	 * PRODUCT SERVICE METHODS
+	 */
+	
+	/***
+	 * Method creates product.
 	 * Method get entries from user and added new product. It returns `true` if the
 	 * operation is successful, or `false` if it is not.
 	 * 
@@ -28,14 +33,14 @@ public class Stock {
 		// String productUNHashCode, String productName, String productCategory, String
 		// productSubcategory, double productPrice
 		System.out.println("Let's make a new product.");
-		String hash = getStringName("Enter or scan universal hash-code: ");
-		String name = getStringName("Enter name of product: ");
-		String brand = getStringName("Enter brand of product: ");
-		String category = getStringName("Enter number of category: ");
-		String subcategory = getStringName("Enter number of subcategory: ");
+		String hash = getStringEntry("Enter or scan universal hash-code: ");
+		String name = getStringEntry("Enter name of product: ");
+		String brand = getStringEntry("Enter brand of product: ");
+		String category = getStringEntry("Enter number of category: ");
+		String subcategory = getStringEntry("Enter number of subcategory: ");
 		Double price = (double) 0;
 		try {
-			price = Double.valueOf(getStringName("Enter price as number: ").trim());
+			price = Double.valueOf(getStringEntry("Enter price as number: ").trim());
 		} catch (Exception e) {
 			System.out.println("This number is not correct: " + e.getMessage());
 		}
@@ -43,9 +48,14 @@ public class Stock {
 
 	}
 
-	public static boolean setQuantity(Product product) {
+	/***
+	 * Method set product's quantity. Default quantity of a new product is zero.
+	 * @param product
+	 * @return
+	 */
+	public static boolean setProductQuantity(Product product) {
 		try {
-			int stockQuantity = Integer.valueOf(getStringName("Enter quantity as number: ").trim());
+			int stockQuantity = Integer.valueOf(getStringEntry("Enter quantity as number: ").trim());
 			product.setProductStockQuantity(stockQuantity);
 			return true;
 		} catch (Exception e) {
@@ -59,52 +69,30 @@ public class Stock {
 		System.out.println(
 				"Product " + product.getProductShopHashCode() + " (" + product.getProductName() + ") " + " is deleted");
 	}
-
-	public static void sortByPrice() {
-		if (Stock.getStringName("Do you want to sort products by ascending? Y/N: ").trim().equalsIgnoreCase("y")) {
-			ascending = true;
-		} else {
-			ascending = false;
-		}
-		if (ascending) {
-			products.sort((p1, p2) -> ((Double) p1.getProductPrice()).compareTo((Double) (p2.getProductPrice())));
-		} else {
-			products.sort(
-					(p1, p2) -> (-1) * ((Double) p1.getProductPrice()).compareTo((Double) (p2.getProductPrice())));
-		}
-		System.out.println("Products are sorted");
+	
+	public static void doProductSale() {
+//		TODO
 	}
-
-	public static void getLowStockProducts() {
-		try {
-			double threshold = Double.valueOf(Stock.getStringName("Enter price: ").trim());
-			done = false;
-			products.forEach(p -> {
-				if (p.getProductPrice() < threshold) {
-					p.toString();
-					done = true;
-				}
-			});
-		} catch (Exception e) {
-			e.getMessage();
-		}
-		if (!done) {
-			System.out.println("Products not found");
-		}
+	
+	public static void doProductsMarkdown() {
+//		TODO
 	}
-
-	public static void sortProducts() {
-		products.sort((p1, p2) -> p1.getProductName().compareTo(p2.getProductName()));
+	
+	public static void doPartProductsMarkdown() {
+		//TODO
 	}
-
-	public static void allProductsInfo() {
-		products.forEach(p -> p.toString());
-	}
-
-	public static Product findProductByCategory(String category) {
+	
+	/***
+	 * FIND PRODUCT METHODS
+	 */
+	
+	public static List<Product> findProductsByCategory(String categoryName) {
+		List<Product> listProductsWithEntryCategory = new ArrayList<Product>();
+		Optional<Category> category = findCategoryByName(categoryName);
+//		TODO
 		done = false;
 		products.forEach(p -> {
-			if (p.getProductCategory().equalsIgnoreCase(category)) {
+			if (p.getProductCategory().equals(category)) {
 				p.toString();
 				done = true;
 			}
@@ -112,7 +100,13 @@ public class Stock {
 		if (!done) {
 			System.out.println("Category not found");
 		}
-		return pr;
+		return listProductsWithEntryCategory;
+	}
+	
+	public static List<Product> findProductsBySubcategory(String subcategoryName){
+		List <Product> listProductWithEntrySubcategory = new ArrayList<Product>();
+//		TODO
+		return listProductWithEntrySubcategory;
 	}
 
 	public static Product findProductByName(String productName) {
@@ -131,8 +125,106 @@ public class Stock {
 		pr.toString();
 		return pr;
 	}
+	
 
-	public static String getStringName(String str) {
+	/***
+	 * SORT PRODUCT METHODS
+	 */
+	
+	
+	public static void sortProductsByPrice() {
+		if (Stock.getStringEntry("Do you want to sort products by ascending? Enter 'Y' for \"yes\": ").trim().equalsIgnoreCase("y")) {
+			ascending = true;
+		} else {
+			ascending = false;
+		}
+		if (ascending) {
+			products.sort((p1, p2) -> ((Double) p1.getProductPrice()).compareTo((Double) (p2.getProductPrice())));
+		} else {
+			products.sort(
+					(p1, p2) -> (-1) * ((Double) p1.getProductPrice()).compareTo((Double) (p2.getProductPrice())));
+		}
+		System.out.println("Products are sorted by price");
+	}
+
+	public static void getLowStockProducts() {
+		try {
+			double threshold = Double.valueOf(Stock.getStringEntry("Enter price: ").trim());
+			done = false;
+			products.forEach(p -> {
+				if (p.getProductPrice() < threshold) {
+					p.toString();
+					done = true;
+				}
+			});
+		} catch (Exception e) {
+			e.getMessage();
+		}
+		if (!done) {
+			System.out.println("Products not found");
+		}
+	}
+
+	public static void sortProductsByName() {
+		products.sort((p1, p2) -> p1.getProductName().compareTo(p2.getProductName()));
+		System.out.println("Products are sorted by name");
+	}
+
+	/***
+	 * CATEGORY SERVICE METHODS
+	 */
+
+	public static Category addCategory() {
+//		TODO
+		String categoryName = getStringEntry("Enter name of new Category");
+		//логика по которой предложить уже имеющиеся категории с похожими именами
+		return new Category(categoryName);
+	}
+	
+	public static boolean removeCategory() {
+//		TODO
+		return false;
+	}
+
+	public static Optional<Category> findCategoryByName(String categoryName){
+		Optional<Category> cat = Optional.of(null);
+//		TODO
+		return cat;
+		
+	}
+	
+	public static Optional<Category> findCategoryByIndex(int index) {
+		Optional<Category> cat = Optional.of(null);
+//		TODO
+		return cat;
+	}
+	
+	public static void sortCategoryByName() {
+//		TODO
+	}
+
+	public static void editCategoryName() {
+//		TODO
+	}
+	
+	public static void editCategoryListSubcategory() {
+//		TODO
+//		Добавить, удалить, переименовать
+	}
+	
+	/***
+	 * 
+	 * @param sc
+	 */
+	public static void startStockScanner(Scanner sc) {
+		setSc(sc);
+	}
+	
+	public static void createDefaultCategories(){
+//		TODO
+	}	
+
+	public static String getStringEntry(String str) {
 		int x = 5;
 		while (x > 0) {
 			System.out.println(str);
@@ -145,27 +237,6 @@ public class Stock {
 		}
 		return "Not real";
 
-	}
-
-	public boolean isCategory(Category category) {
-		return (categories.contains(category));
-	}
-
-	public static void exit() {
-		System.out.println("Bye");
-		sc.close();
-	}
-
-	/***
-	 * 
-	 * @param sc
-	 */
-	public static void startStockScanner(Scanner sc) {
-		setSc(sc);
-	}
-	
-	public static void createDefaultCategories(){
-//		TODO
 	}
 	
 	public static String categoriesToString(){
@@ -194,6 +265,12 @@ public class Stock {
 //		TODO
 		return null;
 	}
+	
+//	TODO
+	public static String productsToString() {
+		return null;
+	}
+
 
 	/***
 	 * Getters and setters
@@ -229,14 +306,6 @@ public class Stock {
 
 	public static void setCategories(List<Category> categories) {
 		Stock.categories = categories;
-	}
-
-	public static List<Inventory> getInventories() {
-		return inventories;
-	}
-
-	public static void setInventories(List<Inventory> inventories) {
-		Stock.inventories = inventories;
 	}
 
 }

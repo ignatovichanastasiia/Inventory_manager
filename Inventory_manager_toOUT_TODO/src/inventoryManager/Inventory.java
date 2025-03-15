@@ -2,9 +2,6 @@ package inventoryManager;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 //clean
 /***
@@ -22,29 +19,24 @@ import java.util.Map;
  */
 public class Inventory implements InventoryUpdatable{
 	private static int inventoryCounter = 0;
-	private List<Product> inventoryList;
-	private Map<Product,Integer> inventoryMap;
 	private Product inventoryProduct;
 	private int inventoryProductCounter;
 	private String inventoryName;	
 	
 	/***
-	 * The constructor takes no parameters for initialization. In the constructor, a new list is created 
-	 * from the already existing products, and the first product in the list becomes the item to be checked. 
-	 * If the incoming (scanned) hash code belongs to the checked product, the quantity of the product in 
-	 * the map is increased by one. 
+	 * The constructor takes product as parameter for initialization. 
+	 * This is the product whose quantity is counted by this inventory.
+	 * The inventory name is generated in the service method and assigned in the constructor.
 	 */
-	public Inventory() {
+	public Inventory(Product inventoryProduct) {
 		this.inventoryName = genID();
-		this.inventoryList = Stock.getProducts();
-		this.inventoryProduct = Stock.getProducts().getFirst();
+		this.inventoryProduct = inventoryProduct;
 		this.inventoryProductCounter = 0;
-		this.inventoryMap = new HashMap<Product,Integer>();
 	}
 
 	/***
-	 * The method takes a hash code as a parameter. 
-	 * If the hash code matches the selected product's hash code, the product 
+	 * The method takes a hash-code as a parameter. 
+	 * If the hash code matches the selected product's hash-code, the product 
 	 * quantity is increased by 1, and the method returns `true`. If it does not match, 
 	 * the method returns `false`.
 	 */
@@ -58,7 +50,7 @@ public class Inventory implements InventoryUpdatable{
 	}
 
 	/***
-	 * The method takes the product's hash code and the final quantity as parameters. 
+	 * The method takes the product's hash-code and the final quantity as parameters. 
 	 * The method allows manually entering the final product quantity for the inventory. 
 	 * It returns `true` if the operation is successful, or `false` if it is not.
 	 * @return boolean
@@ -66,13 +58,14 @@ public class Inventory implements InventoryUpdatable{
 	@Override
 	public boolean addTotalProductQuantity(String hashcode, int totalQuantity) {
 		if(!hashcode.isBlank() && totalQuantity>=0 && (inventoryProduct.getProductShopHashCode().equals(hashcode))){
-			inventoryMap.put(inventoryProduct, inventoryProductCounter);
+			inventoryProductCounter = totalQuantity;
+			return true;
 		}
 		return false;
 	}
 
 	/***
-	 * The method takes the hash code of the product to be checked as a parameter. 
+	 * The method takes the hash-code of the product to be checked as a parameter. 
 	 * The product quantity for the inventory is reset to zero.
 	 * It returns `true` if the operation is successful, or `false` if it is not.
 	 * @param hashcode
@@ -81,7 +74,7 @@ public class Inventory implements InventoryUpdatable{
 	@Override
 	public boolean resetProductQuantity(String hashcode) {
 		if(!hashcode.isBlank() && (inventoryProduct.getProductShopHashCode().equals(hashcode))) {
-			inventoryMap.replace(inventoryProduct, 0);
+			inventoryProductCounter = 0;
 			return true;
 		}
 		return false;
@@ -101,23 +94,6 @@ public class Inventory implements InventoryUpdatable{
 	 * Getters and setters
 	 *
 	 */
-	
-	public List<Product> getInventoryList() {
-		return inventoryList;
-	}
-
-	public void setInventoryList(List<Product> inventoryList) {
-		this.inventoryList = inventoryList;
-	}
-
-	public Map<Product, Integer> getInventoryMap() {
-		return inventoryMap;
-	}
-
-	public void setInventoryMap(Map<Product, Integer> inventoryMap) {
-		this.inventoryMap = inventoryMap;
-	}
-
 	public Product getInventoryProduct() {
 		return inventoryProduct;
 	}
