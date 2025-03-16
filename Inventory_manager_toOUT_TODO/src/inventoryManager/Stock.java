@@ -11,8 +11,6 @@ import java.util.Scanner;
  */
 public class Stock {
 	private static Scanner sc;
-//	private static Product pr;
-//	private static boolean done;
 	private static boolean ascending;
 	private static List<Product> products = new ArrayList<Product>();
 	private static List<Category> categories = new ArrayList<Category>();
@@ -153,6 +151,22 @@ public class Stock {
 	}
 	
 	/***
+	 * This method takes as a parameter product's brand's hash-code (from box) and return List of Products. 
+	 * Brand's hash-code is not an uncle parameter for Product. If price or other parameter is not the same, 
+	 * Product is not the same Object.
+	 * @param product universal HashCode (from brand)
+	 * @return list of searched products
+	 */
+	public static List<Product> findProductByUnHashCode(String productUnHashCode) {
+		List<Product> productsByUnHash = new ArrayList<Product>();
+		if (products.size() != 0) {
+			productsByUnHash = products.stream().filter(pr -> pr.getProductUNHashCode().equals(productUnHashCode))
+					.toList();
+		}
+	return productsByUnHash;
+	}
+	
+	/***
 	 * The method searches for products by brand. It takes a brand name as a
 	 * parameter, and if the name matches the brand, the products are
 	 * filtered by brand and collected into a list to be returned by the method.
@@ -248,6 +262,9 @@ public class Stock {
 //		TODO
 	}
 
+	/***
+	 * A utility method for reading data entered by the client in the console.
+	 */
 	public static String getStringEntry(String str) {
 		int x = 5;
 		while (x > 0) {

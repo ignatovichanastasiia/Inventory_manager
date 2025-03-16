@@ -146,6 +146,9 @@ public class Main {
 	 * 
 	 */
 
+	/***
+	 * A utility method for reading data entered by the client in the console.
+	 */
 	public static String getStringEntry(String str) {
 		int x = 5;
 		while (x > 0) {

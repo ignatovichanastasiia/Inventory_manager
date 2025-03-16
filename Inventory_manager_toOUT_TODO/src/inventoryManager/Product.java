@@ -179,6 +179,14 @@ public Product(String productUNHashCode, String productName, String brand, Strin
 	public void setProductStockQuantity(int productStockQuantity) {
 		this.productStockQuantity = productStockQuantity;
 	}
+	
+	public String getProductUNHashCode() {
+		return productUNHashCode;
+	}
+	
+	public void setProductUNHashCode(String productUNHashCode) {
+		this.productUNHashCode = productUNHashCode;
+	}
 
 
 	@Override
